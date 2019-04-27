@@ -13,6 +13,7 @@ class Request {
 		if ($request) $this->parseRequest($request);
 	}
 	
+	// parses all necessary values from the webhook request
 	public function parseRequest(array $request) {
 		$this->messageId = $request['message_id'];
 		$this->from = [
@@ -31,6 +32,7 @@ class Request {
 		return $this;
 	}
 	
+	// get a single "chunk" of the action
 	public function getPart(int $i = null, bool $array = false) {
 		if ($i === null) return $this->parts;
 		elseif (isset($this->parts[$i])) {
@@ -38,9 +40,10 @@ class Request {
 		} else return $array ? [] : '';
 	}
 	
+	// the received request sanitized (lower case separated with single spaces)
 	private function sanitize($text) {
 		// lower case
-		$text = mb_strtolower($text, 'UTF-8');
+		$text = strtolower($text);
 		// whitespace
 		$text = trim(preg_replace('~\s+~', ' ', $text));
 		return $text;

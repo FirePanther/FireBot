@@ -7,9 +7,11 @@ namespace {
 }
 
 namespace app {
+	header('Content-Type: text/plain; charset=utf-8');
+	
 	// testing
 	$_POST['message'] = \debug\Testing::request([
-		'text' => 'gallery add'
+		'text' => 'help'
 	]);
 	
 	if (isset($_POST['message'])) {
