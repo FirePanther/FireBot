@@ -12,7 +12,9 @@ class Response {
 	// lines queue
 	private $lines = [];
 	
-	function __construct() {}
+	function __construct($text = null, $format = null) {
+		if ($text !== null) $this->addLine($text, $format);
+	}
 	
 	// adds a new formated line into the queue for responding
 	// * the first argument may be a multidimensional array for multiple formats
@@ -74,7 +76,16 @@ class Response {
 	}
 	
 	// finally respond
-	public function emit($chatId) {
+	public function emit($chatId = null) {
+		if ($chatId === null) {
+			$request = \app\FireBot::getRequest();
+			if ($request !== false) {
+				$chatId = $request->getChat('id');
+			} else {
+				throw new \Exception('No chatId defined');
+			}
+		}
+		
 		Bot::sendMessage([
 			'chat_id' => $chatId,
 			'text' => implode("\n", $this->lines),
