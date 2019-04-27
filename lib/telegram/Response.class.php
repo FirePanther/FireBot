@@ -75,7 +75,6 @@ class Response {
 	
 	// finally respond
 	public function emit($chatId) {
-		echo "emit to $chatId\n";
 		Bot::sendMessage([
 			'chat_id' => $chatId,
 			'text' => implode("\n", $this->lines),

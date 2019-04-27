@@ -1,6 +1,7 @@
 <?php
 namespace action;
 
+use \app\FireBot;
 use \telegram\Response;
 
 class Help {
@@ -13,7 +14,7 @@ class Help {
 		print_r($helpCategories);
 		$this->addCategoriesToResponse($response, $helpCategories);
 		
-		$response->emit(33357188);
+		$response->emit(FireBot::getRequest()->getChatId());
 	}
 	
 	// adds the parsed categories from the actions as response lines

@@ -32,6 +32,14 @@ class Request {
 		return $this;
 	}
 	
+	public function getChat() {
+		return $this->chat;
+	}
+	
+	public function getChatId() {
+		return $this->chat[0];
+	}
+	
 	// get a single "chunk" of the action
 	public function getPart(int $i = null, bool $array = false) {
 		if ($i === null) return $this->parts;
