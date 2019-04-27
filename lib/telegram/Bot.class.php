@@ -15,14 +15,7 @@ class Bot {
 		$result = curl_exec($ch);
 		curl_close($ch);
 		
-		print_r([
-			$botApiMethodUrl,
-			$arguments[0]
-		]);
-		
 		$resultArray = @json_decode($result, true);
-		
-		print_r($resultArray);
 		
 		return $resultArray ?: $result;
 	}

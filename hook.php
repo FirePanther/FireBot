@@ -8,14 +8,7 @@ namespace {
 
 namespace app {
 	header('Content-Type: text/plain; charset=utf-8');
-	
-	// testing
-	$_POST['message'] = \debug\Testing::request([
-		'text' => 'help'
-	]);
-	
-	if (isset($_POST['message'])) {
-		$fireBot = new FireBot($_POST['message']);
-		$fireBot->exec();
-	}
+
+	$fireBot = new FireBot(file_get_contents('php://input'));
+	$fireBot->exec();
 }
