@@ -3,3 +3,5 @@
 
 define('BOT_NAME', 'FirePantherBot');
 define('BOT_TOKEN', '');
+define('REPORT_ERRORS', true); // for debugging
+

@@ -1,6 +1,8 @@
 <?php
 namespace system;
 
+use \telegram\Response;
+
 class Handler {
 	// log the error
 	public static function error(int $errno, string $errstr, string $errfile, int $errline, array $errcontext) {
@@ -8,6 +10,11 @@ class Handler {
 			date('[d H:i:s]').": #$errno, $errstr [$errfile:$errline]",
 			// print_r(debug_backtrace(), 1)
 		]);
+		
+		if (REPORT_ERRORS) {
+			$response = new Response('❌ '.$errstr);
+			$response->emit();
+		}
 	}
 	
 	// log the exception
@@ -16,6 +23,12 @@ class Handler {
 			date('[d H:i:s]').': '.$e->getMessage(),
 			print_r(debug_backtrace(), 1)
 		]);
+		
+		if (REPORT_ERRORS) {
+			$response = new Response('❌ '.$e->getMessage());
+			$response->emit();
+		}
+		
 		return false;
 	}
 	
