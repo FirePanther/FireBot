@@ -14,7 +14,7 @@ class Help {
 		print_r($helpCategories);
 		$this->addCategoriesToResponse($response, $helpCategories);
 		
-		$response->emit(FireBot::getRequest()->getChatId());
+		$response->emit(FireBot::getRequest()->getChat('id'));
 	}
 	
 	// adds the parsed categories from the actions as response lines
