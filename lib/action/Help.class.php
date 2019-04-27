@@ -28,7 +28,7 @@ class Help {
 		}
 	}
 	
-	// searches for action php class files and retreives the configurations
+	// searches for action php class files and retrieves the configurations
 	public function parseActions($response) {
 		$helpCategories = [
 			'commands' => []
