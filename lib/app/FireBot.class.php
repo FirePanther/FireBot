@@ -29,14 +29,12 @@ class FireBot {
 					return strtoupper($m[1]);
 				}, self::$telegramRequest->getCommand());
 				
-				// \debug\Log::info('className: '.$className);
-				
 				if (preg_match('~^\w+$~', $className) && file_exists(MAIN_DIR."/lib/action/$className.class.php")) {
 					$classNamespace = "\\action\\$className";
 					$action = new $classNamespace(self::$telegramRequest);
 					$action->emit();
-				}
-			}
-		}
+				} else \debug\Log::warning('Invalid class name: '.$className);
+			} else \debug\Log::info('Message has no command');
+		} else \debug\Log::error('Invalid request');
 	}
 }

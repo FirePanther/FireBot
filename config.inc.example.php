@@ -3,7 +3,10 @@
 
 define('BOT_NAME', 'FirePantherBot');
 define('BOT_TOKEN', '');
-define('REPORT_ERRORS', true); // for debugging
+
+// for debugging
+define('REPORT_ERRORS', true);
+define('DEBUG', false); // verbose
 
 // authorization (the telegram user id with admin permission)
 define('ADMIN_USER_ID', '');
