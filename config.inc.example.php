@@ -8,5 +8,6 @@ define('BOT_TOKEN', '');
 define('REPORT_ERRORS', true);
 define('DEBUG', false); // verbose
 
-// authorization (the telegram user id with admin permission)
+// security and administration
 define('ADMIN_USER_ID', '');
+define('THROUGH_CLOUDFLARE', false);

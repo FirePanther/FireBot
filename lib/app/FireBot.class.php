@@ -7,6 +7,11 @@ class FireBot {
 	private static $telegramRequest = false;
 	
 	function __construct($request = null) {
+		$ip = null;
+		if (!\telegram\Bot::validate($ip)) {
+			throw new \Exception('Invalid requester ip address: '.$ip.print_r($_SERVER, 1));
+		}
+		
 		if ($request !== null) $this->parseRequest($request);
 	}
 	
@@ -34,7 +39,7 @@ class FireBot {
 					$action = new $classNamespace(self::$telegramRequest);
 					$action->emit();
 				} else \debug\Log::warning('Invalid class name: '.$className);
-			} else \debug\Log::info('Message has no command');
+			} // else \debug\Log::info('Message has no command');
 		} else \debug\Log::error('Invalid request');
 	}
 }

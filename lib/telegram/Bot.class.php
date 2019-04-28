@@ -25,4 +25,40 @@ class Bot {
 		
 		return $resultArray ?: $result;
 	}
+	
+	// validate requester by ip
+	// https://core.telegram.org/bots/webhooks#the-short-version
+	public static function validate(&$ip = null) {
+		if ($ip === null) {
+			$ip = THROUGH_CLOUDFLARE && isset($_SERVER['HTTP_CF_CONNECTING_IP'])
+				? $_SERVER['HTTP_CF_CONNECTING_IP']
+				: $_SERVER['REMOTE_ADDR'];
+		}
+		$floatIp = self::ipToFloat($ip);
+		
+		$ipRanges = [
+			[
+				'from' => '149.154.160.0',
+				'to' => '149.154.175.255'
+			], [
+				'from' => '91.108.4.0',
+				'to' => '91.108.7.255'
+			]
+		];
+
+		foreach ($ipRanges as $ipRange) {
+			$floatIpRangeFrom = self::ipToFloat($ipRange['from']);
+			$floatIpRangeTo = self::ipToFloat($ipRange['to']);
+			if ($floatIp >= $floatIpRangeFrom && $floatIp <= $floatIpRangeTo) {
+				// the ip address is in a valid range
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	// help function, convert ip address to a number
+	private static function ipToFloat($ip) {
+		return (float)sprintf('%u', ip2long($ip));
+	}
 }
