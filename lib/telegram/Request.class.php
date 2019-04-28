@@ -28,7 +28,7 @@ class Request {
 			}
 		}
 		
-		file_put_contents(MAIN_DIR.'/last-message', print_r($request, 1));
+		\util\File::write(MAIN_DIR.'/log/last-message', print_r($request, 1));
 		
 		$this->updateId = $request['update_id'];
 		
