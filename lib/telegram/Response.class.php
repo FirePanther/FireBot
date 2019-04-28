@@ -5,12 +5,15 @@ class Response {
 	const BOLD = '*';
 	const ITALIC = '_';
 	const MONOSPACE = '`';
+	const CODE = '```';
 	
 	// escape functional chars
 	const ESCAPE_PATTERN = '~(_|\*|\`|\[)~';
 	
 	// lines queue
 	private $lines = [];
+	
+	private $insideCode = false;
 	
 	protected $sendMessageParameters = [];
 	
@@ -21,21 +24,32 @@ class Response {
 	// adds a new formated line into the queue for responding
 	// * the first argument may be a multidimensional array for multiple formats
 	// * in a single line, e.g.: [['bold', '*'], [' text']] for: *bold* text
-	public function addLine($text = '', $format = null) {
+	public function addLine($text = '', $format = null, $escape = true) {
+		if ($this->insideCode) $escape = false;
+		
 		if (is_array($text)) {
 			// single line with multiple formats
 			$line = [];
 			foreach ($text as $chunkArray) {
 				if (!is_array($chunkArray)) $chunkArray = [$chunkArray];
-				$line[] = $this->escapeText(
-					$chunk[0],
-					isset($chunk[1]) ? $chunk[1] : null
-				);
+				if ($escape) {
+					$chunk[0] = $this->escapeText(
+						$chunk[0],
+						isset($chunk[1]) ? $chunk[1] : null
+					);
+				}
+				$line[] = $chunk[0];
 			}
 			$this->lines[] = implode('', $line);
 		} else {
-			$this->lines[] = $this->escapeText($text, $format);
+			if ($escape) $text = $this->escapeText($text, $format);
+			$this->lines[] = $text;
 		}
+	}
+	
+	
+	public function addUnescapedLine($text = '') {
+		$this->addLine($text, null, false);
 	}
 	
 	// add one or more lines at once
@@ -88,10 +102,20 @@ class Response {
 			}
 		}
 		
-		Bot::sendMessage([
+		Bot::sendMessage($this->sendMessageParameters + [
 			'chat_id' => $chatId,
 			'text' => implode("\n", $this->lines),
 			'parse_mode' => 'Markdown'
 		]);
+	}
+	
+	public function startCode() {
+		$this->insideCode = true;
+		$this->addUnescapedLine(self::CODE);
+	}
+	
+	public function endCode() {
+		$this->insideCode = false;
+		$this->addUnescapedLine(self::CODE);
 	}
 }
