@@ -104,6 +104,15 @@ class Request {
 		return '';
 	}
 	
+	public function getParameters() {
+		if ($this->entities) {
+			$beforeCommand = substr($this->text, 0, $this->entities[0]['offset']);
+			$afterCommand = substr($this->text, $this->entities[0]['offset'] + $this->entities[0]['length']);
+			return trim($beforeCommand.$afterCommand);
+		}
+		return $this->text;
+	}
+	
 	// get a single "chunk" of the action
 	public function getPart(int $i = null, bool $array = false) {
 		if ($i === null) return $this->parts;
