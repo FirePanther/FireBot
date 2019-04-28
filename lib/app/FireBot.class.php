@@ -9,7 +9,7 @@ class FireBot {
 	function __construct($request = null) {
 		$ip = null;
 		if (!\telegram\Bot::validate($ip)) {
-			throw new \Exception('Invalid requester ip address: '.$ip.print_r($_SERVER, 1));
+			throw new \Exception('Invalid requester ip address: '.$ip);
 		}
 		
 		if ($request !== null) $this->parseRequest($request);
