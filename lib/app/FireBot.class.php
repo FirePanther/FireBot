@@ -25,7 +25,9 @@ class FireBot {
 		if (self::$telegramRequest !== false) {
 			// if request is a bot command, search for the action/command class
 			if (self::$telegramRequest->isBotCommand()) {
-				$className = ucfirst(self::$telegramRequest->getCommand());
+				$className = preg_replace_callback('~(?:^|_)(\w)~', function($m) {
+					return strtoupper($m[1]);
+				}, self::$telegramRequest->getCommand());
 				
 				// \debug\Log::info('className: '.$className);
 				
