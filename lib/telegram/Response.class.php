@@ -14,6 +14,7 @@ class Response {
 	private $lines = [];
 	
 	private $insideCode = false;
+	private $isDebug = false;
 	
 	protected $sendMessageParameters = [];
 	
@@ -99,6 +100,10 @@ class Response {
 	public function endCode() {
 		$this->insideCode = false;
 		$this->addUnescapedLine(self::CODE);
+	}
+	
+	public function setDebug(bool $debug) {
+		$this->debug = $debug;
 	}
 	
 	// finally respond
