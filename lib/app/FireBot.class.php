@@ -33,7 +33,8 @@ class FireBot {
 				
 				if (preg_match('~^\w+$~', $className) && file_exists(MAIN_DIR."/lib/action/$className.class.php")) {
 					$classNamespace = "\\action\\$className";
-					new $classNamespace(self::$telegramRequest);
+					$action = new $classNamespace(self::$telegramRequest);
+					$action->emit();
 				}
 			}
 		}

@@ -1,9 +1,13 @@
 <?php
 namespace action;
 
-class Gallery {
+class Gallery implements IAction {
 	function __construct($telegramRequest) {
-		echo "hey, i am the gallery :)";
+		
+	}
+	
+	public function emit() {
+		$this->response->emit();
 	}
 	
 	// configurations for this action, for /help
