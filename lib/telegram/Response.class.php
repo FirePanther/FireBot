@@ -12,6 +12,8 @@ class Response {
 	// lines queue
 	private $lines = [];
 	
+	protected $sendMessageParameters = [];
+	
 	function __construct($text = null, $format = null) {
 		if ($text !== null) $this->addLine($text, $format);
 	}
