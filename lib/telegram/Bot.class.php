@@ -23,6 +23,10 @@ class Bot {
 			$result
 		]);
 		
+		if (!$resultArray['ok']) {
+			throw new \Exception($resultArray['description']);
+		}
+		
 		return $resultArray ?: $result;
 	}
 	
