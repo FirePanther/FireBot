@@ -17,6 +17,16 @@ class Help implements IAction {
 		$this->response->emit();
 	}
 	
+	// configurations for this action, for /help
+	public static function config() {
+		return [
+			'command' => [
+				'name' => 'help',
+				'description' => 'Shows a list of commands'
+			]
+		];
+	}
+	
 	// searches for action php class files and retrieves the configurations
 	public static function parseActions($addLeadingSlashes = true, $filterCategories = []) {
 		$helpCategories = [
