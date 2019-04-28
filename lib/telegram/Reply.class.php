@@ -9,7 +9,7 @@ class Reply extends Response {
 			throw new \Exception('Can\'t find message to reply to');
 		}
 		
-		$this->sendMessageParameters = [
+		$this->sendMessageParameters += [
 			'reply_to_message_id' => $request->getMessageId()
 		];
 		
