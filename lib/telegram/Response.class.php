@@ -33,12 +33,12 @@ class Response {
 			foreach ($text as $chunkArray) {
 				if (!is_array($chunkArray)) $chunkArray = [$chunkArray];
 				if ($escape) {
-					$chunk[0] = $this->escapeText(
-						$chunk[0],
-						isset($chunk[1]) ? $chunk[1] : null
+					$chunkArray[0] = $this->escapeText(
+						$chunkArray[0],
+						isset($chunkArray[1]) ? $chunkArray[1] : null
 					);
 				}
-				$line[] = $chunk[0];
+				$line[] = $chunkArray[0];
 			}
 			$this->lines[] = implode('', $line);
 		} else {
@@ -104,7 +104,7 @@ class Response {
 		
 		Bot::sendMessage($this->sendMessageParameters + [
 			'chat_id' => $chatId,
-			'text' => implode("\n", $this->lines),
+			'text' => trim(implode("\n", $this->lines)),
 			'parse_mode' => 'Markdown'
 		]);
 	}
