@@ -91,6 +91,16 @@ class Response {
 			).$format;
 	}
 	
+	public function startCode() {
+		$this->insideCode = true;
+		$this->addUnescapedLine(self::CODE);
+	}
+	
+	public function endCode() {
+		$this->insideCode = false;
+		$this->addUnescapedLine(self::CODE);
+	}
+	
 	// finally respond
 	public function emit($chatId = null) {
 		if ($chatId === null) {
@@ -107,15 +117,5 @@ class Response {
 			'text' => trim(implode("\n", $this->lines)),
 			'parse_mode' => 'Markdown'
 		]);
-	}
-	
-	public function startCode() {
-		$this->insideCode = true;
-		$this->addUnescapedLine(self::CODE);
-	}
-	
-	public function endCode() {
-		$this->insideCode = false;
-		$this->addUnescapedLine(self::CODE);
 	}
 }

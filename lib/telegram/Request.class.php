@@ -30,38 +30,50 @@ class Request {
 		
 		\util\File::write(MAIN_DIR.'/log/last-message', print_r($request, 1));
 		
-		$this->updateId = $request['update_id'];
+		if (isset($request['update_id'])) $this->updateId = $request['update_id'];
 		
-		$requestMessage = $request['message'];
-		$this->messageId = $requestMessage['message_id'];
-		
-		// from name (single person or bot)
-		$requestFrom = $requestMessage['from'];
-		$this->from = [
-			'id' => $requestFrom['id'],
-			'name' => $requestFrom['first_name'],
-			'username' => $requestFrom['username'],
-			'isBot' => $requestFrom['is_bot'],
-			'language' => $requestFrom['language_code'],
-		];
-		
-		// current chat (private chat or group)
-		$requestChat = $requestMessage['chat'];
-		$this->chat = [
-			'id' => $requestChat['id'],
-			'name' => $requestChat['first_name'],
-			'username' => $requestChat['username'],
-			'isPrivate' => $requestChat['type'] === 'private',
-		];
-		
-		$this->date = $requestMessage['date'];
-		
-		// message text
-		$this->text = $requestMessage['text'];
-		$this->textSanitized = $this->sanitize($this->text);
-		$this->parts = explode(' ', $this->textSanitized);
-		
-		$this->entities = isset($requestMessage['entities']) ? $requestMessage['entities'] : [];
+		if (isset($request['message'])) {
+			$requestMessage = $request['message'];
+			$this->messageId = $requestMessage['message_id'];
+			
+			// from name (single person or bot)
+			if (isset($requestMessage['from'])) {
+				$requestFrom = $requestMessage['from'];
+				$this->from = [
+					'id' => $requestFrom['id'],
+					'isBot' => $requestFrom['is_bot'],
+					'language' => isset($requestFrom['language_code']) ? $requestFrom['language_code'] : '',
+				];
+				if (isset($requestFrom['username'])) $this->from['username'] = $requestFrom['username'];
+				if (isset($requestFrom['first_name'])) {
+					$this->from['name'] = $requestFrom['first_name'].(isset($requestFrom['last_name']) ? ' '.$requestFrom['last_name'] : '');
+				}
+			}
+			
+			// current chat (private chat or group)
+			if (isset($requestMessage['chat'])) {
+				$requestChat = $requestMessage['chat'];
+				$this->chat = [
+					'id' => $requestChat['id'],
+					'isPrivate' => $requestChat['type'] === 'private',
+				];
+				if (isset($requestChat['username'])) $this->chat['username'] = $requestChat['username'];
+				if (isset($requestChat['first_name'])) {
+					$this->chat['name'] = $requestChat['first_name'].(isset($requestChat['last_name']) ? ' '.$requestChat['last_name'] : '');
+				}
+			}
+			
+			$this->date = $requestMessage['date'];
+			
+			// message text
+			if (isset($requestMessage['text'])) {
+				$this->text = $requestMessage['text'];
+				$this->textSanitized = $this->sanitize($this->text);
+				$this->parts = explode(' ', $this->textSanitized);
+			}
+			
+			$this->entities = isset($requestMessage['entities']) ? $requestMessage['entities'] : [];
+		}
 		
 		return $this;
 	}

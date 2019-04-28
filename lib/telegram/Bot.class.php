@@ -17,6 +17,12 @@ class Bot {
 		
 		$resultArray = @json_decode($result, true);
 		
+		\util\File::write(MAIN_DIR.'/log/last-response', [
+			$botApiMethodUrl,
+			$arguments[0],
+			$result
+		]);
+		
 		return $resultArray ?: $result;
 	}
 }

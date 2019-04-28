@@ -7,7 +7,7 @@ class File {
 		$fh = fopen($filename, $mode);
 		if (is_array($content)) {
 			array_walk($content, function($line) use ($fh) {
-				fwrite($fh, $line.PHP_EOL);
+				fwrite($fh, (is_array($line) ? json_encode($line) : $line).PHP_EOL);
 			});
 		} else fwrite($fh, $content.PHP_EOL);
 		fclose($fh);
