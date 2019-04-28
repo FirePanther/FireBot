@@ -27,6 +27,8 @@ class FireBot {
 			if (self::$telegramRequest->isBotCommand()) {
 				$className = ucfirst(self::$telegramRequest->getCommand());
 				
+				// \debug\Log::info('className: '.$className);
+				
 				if (preg_match('~^\w+$~', $className) && file_exists(MAIN_DIR."/lib/action/$className.class.php")) {
 					$classNamespace = "\\action\\$className";
 					new $classNamespace(self::$telegramRequest);
