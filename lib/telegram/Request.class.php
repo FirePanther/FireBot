@@ -107,11 +107,13 @@ class Request {
 	// returns the command without the slash at the beginning
 	public function getCommand() {
 		if ($this->entities) {
-			return substr(
+			$commandFullName = substr(
 				$this->text,
 				$this->entities[0]['offset'] + 1,
 				$this->entities[0]['length'] - 1
 			);
+			list($commandName) = explode('@', $commandFullName, 2); // if in group
+			return $commandName;
 		}
 		return '';
 	}
