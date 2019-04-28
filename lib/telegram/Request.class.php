@@ -28,9 +28,14 @@ class Request {
 			}
 		}
 		
-		\util\File::write(MAIN_DIR.'/log/last-message', print_r($request, 1));
-		
 		if (isset($request['update_id'])) $this->updateId = $request['update_id'];
+		else throw new \Exception('No update_id');
+		
+		$responseFile = sys_get_temp_dir().'/telegram-request-update_id-'.(+$this->updateId);
+		if (file_exists($responseFile)) throw new \Exception('Already parsed');
+		touch($responseFile);
+		
+		\util\File::write(MAIN_DIR.'/log/last-message', print_r($request, 1));
 		
 		if (isset($request['message'])) {
 			$requestMessage = $request['message'];
