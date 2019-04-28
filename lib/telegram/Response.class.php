@@ -15,6 +15,7 @@ class Response {
 	
 	private $insideCode = false;
 	private $isDebug = false;
+	private $emittedMessage = [];
 	
 	protected $sendMessageParameters = [];
 	
@@ -47,7 +48,6 @@ class Response {
 			$this->lines[] = $text;
 		}
 	}
-	
 	
 	public function addUnescapedLine($text = '') {
 		$this->addLine($text, null, false);
@@ -108,19 +108,43 @@ class Response {
 	
 	// finally respond
 	public function emit($chatId = null) {
-		if ($chatId === null) {
-			$request = \app\FireBot::getRequest();
-			if ($request !== false) {
-				$chatId = $request->getChat('id');
-			} else {
-				throw new \Exception('No chatId defined');
+		$text = trim(implode("\n", $this->lines));
+		
+		if ($this->emittedMessage) {
+			// update message
+			if ($this->emittedMessage['text'] !== $text) {
+				Bot::editMessageText([
+					'message_id' => $this->emittedMessage['messageId'],
+					'chat_id' => $this->emittedMessage['chatId'],
+					'text' => $text,
+					'parse_mode' => 'Markdown'
+				]);
+				$this->emittedMessage['text'] = $text;
+			}
+		} else {
+			// send message
+			if ($chatId === null) {
+				$request = \app\FireBot::getRequest();
+				if ($request !== false) {
+					$chatId = $request->getChat('id');
+				} else {
+					throw new \Exception('No chatId defined');
+				}
+			}
+			
+			$this->emittedMessage = [
+				'chatId' => $chatId,
+				'text' => $text
+			];
+			$response = Bot::sendMessage($this->sendMessageParameters + [
+				'chat_id' => $chatId,
+				'text' => $text,
+				'parse_mode' => 'Markdown'
+			]);
+			if ($response['ok']) {
+				$message = $response['result'];
+				$this->emittedMessage['messageId'] = $message['message_id'];
 			}
 		}
-		
-		Bot::sendMessage($this->sendMessageParameters + [
-			'chat_id' => $chatId,
-			'text' => trim(implode("\n", $this->lines)),
-			'parse_mode' => 'Markdown'
-		]);
 	}
 }
